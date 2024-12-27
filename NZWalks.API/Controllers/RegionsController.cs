@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NZWalks.API.Data;
 using NZWalks.API.Models.Domain;
+using NZWalks.API.Models.DTOs;
 
 namespace NZWalks.API.Controllers
 {
@@ -8,33 +10,59 @@ namespace NZWalks.API.Controllers
     [ApiController]
     public class RegionsController : ControllerBase
     {
+        private readonly NZWalksDbContext _context;
+
+        public RegionsController(NZWalksDbContext context)
+        {
+            _context = context;
+        }
+
 
         [HttpGet]
 
         public IActionResult GetAll()
         {
 
-            var regions = new List<Region>
+            var regionsDomain = _context.Regions.ToList();
+
+            var regionsDTO = new List<RegionDTO>();
+
+            foreach (var regionDomain in regionsDomain)
             {
-                new Region
+                regionsDTO.Add(new RegionDTO
                 {
-                    Id = Guid.NewGuid(),
-                    Name = "Auckland",
-                    Code = "AL",
-                    RegionImageURL = "https://images.pexels.com/photos/2072264/pexels-photo-2072264.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                    Id = regionDomain.Id,
+                    Code = regionDomain.Code,
+                    Name = regionDomain.Name,
+                    RegionImageURL = regionDomain.RegionImageURL,
+                });
+            }
 
-                },
-                new Region
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Buckland",
-                    Code = "BL",
-                    RegionImageURL = "https://images.pexels.com/photos/2072264/pexels-photo-2072264.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
 
-                }
+            return Ok(regionsDTO);
+        }
+
+
+        [HttpGet]
+        [Route("{id:Guid}")]
+        public IActionResult GetById([FromRoute]Guid id)
+        {
+            var regionDomain = _context.Regions.FirstOrDefault(x=> x.Id == id); 
+            if(regionDomain == null)
+            {
+                return NotFound();
+            }
+
+            RegionDTO regionDTO = new RegionDTO
+            {
+                Id = regionDomain.Id,
+                Code = regionDomain.Code,
+                Name = regionDomain.Name,
+                RegionImageURL = regionDomain.RegionImageURL,
             };
 
-            return Ok(regions);
+            return Ok(regionDTO);
+
         }
     }
 }
