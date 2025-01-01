@@ -2,11 +2,12 @@
 
 namespace NZWalks.API.Models.DTOs
 {
-    public class AddWalksRequestDTO
+    public class UpdateWalkDTO
     {
         [Required]
-        [MaxLength(100,ErrorMessage = "Max length can be only 100 characters")]
+        [MaxLength(100, ErrorMessage = "Max length can be only 100 characters")]
         public string Name { get; set; }
+
 
         [Required]
         [MaxLength(255)]
@@ -14,12 +15,13 @@ namespace NZWalks.API.Models.DTOs
 
         [Required]
         public double LengthInKm { get; set; }
+
         public string? WalkImageURL { get; set; }
 
         [Required]
         public Guid DifficultyId { get; set; }
 
-        [Required]  
+        [Required]
         public Guid RegionId { get; set; }
     }
 }
