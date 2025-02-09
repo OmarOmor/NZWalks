@@ -8,6 +8,7 @@ Functionalities:
 - Pagination
 - Filtering
 - JWT Authorization
+- Repository Pattern
 
 Tools & Technologies:
 - Language: C#
